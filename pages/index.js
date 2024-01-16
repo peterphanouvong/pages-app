@@ -1,8 +1,50 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
-
+import Head from "next/head";
+import Image from "next/image";
+import styles from "../styles/Home.module.css";
+import Link from "next/link";
+import { useKindeAuth } from "@kinde-oss/kinde-auth-nextjs";
 export default function Home() {
+  const { getRefreshToken, isAuthenticated, isLoading, user } = useKindeAuth();
+
+  console.log(getRefreshToken());
+
+  if (isLoading) return <>loading...</>;
+
+  if (isAuthenticated)
+    return (
+      <div className={styles.container}>
+        <main className={styles.main}>
+          <h1 className={styles.title}>You&apos;re logged in!</h1>
+
+          <Link href="/api/auth/logout">
+            <a>Logout</a>
+          </Link>
+
+          <pre>
+            <code>{JSON.stringify(user, null, 2)}</code>
+          </pre>
+        </main>
+
+        <footer className={styles.footer}>
+          <a
+            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Powered by{" "}
+            <span className={styles.logo}>
+              <Image
+                src="/vercel.svg"
+                alt="Vercel Logo"
+                width={72}
+                height={16}
+              />
+            </span>
+          </a>
+        </footer>
+      </div>
+    );
+
   return (
     <div className={styles.container}>
       <Head>
@@ -11,13 +53,20 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      <Link href="/api/auth/login">
+        <a>Sign in</a>
+      </Link>
+
+      <Link href="/api/auth/register">
+        <a>Register</a>
+      </Link>
       <main className={styles.main}>
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
 
         <p className={styles.description}>
-          Get started by editing{' '}
+          Get started by editing{" "}
           <code className={styles.code}>pages/index.js</code>
         </p>
 
@@ -58,12 +107,12 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
+          Powered by{" "}
           <span className={styles.logo}>
             <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
           </span>
         </a>
       </footer>
     </div>
-  )
+  );
 }
